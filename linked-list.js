@@ -229,4 +229,31 @@ class LinkedList {
   }
 }
 
+function reverseLinkedList(head){
+  let previous = null;
+  let current = head;
+  let following = head;
+
+  while(current !== null) {
+
+    // Remembers where to go next, saves that value
+    following = following.next;
+
+    // Flips the nodes next to be pointing to previous
+    current.next = previous;
+
+    // Gives us the value to set next node to
+    previous = current;
+
+    // Set current to the following value that we saved previously
+    current = following;
+  }
+
+  // this is the new head, with pointers in the opposite direction of original
+  return previous;
+}
+
+let lList = new LinkedList([1, 2, 3])
+console.log("reversed list head", reverseLinkedList(lList.head));
+
 module.exports = LinkedList;

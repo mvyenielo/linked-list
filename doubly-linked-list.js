@@ -88,8 +88,18 @@ class DoublyLinkedList {
   shift() {
     if (this.length === 0) throw new Error("List is empty");
 
+    if (this.length === 1) {
+      const val = this.head.val;
+      this.head = this.tail = null;
+      this.length -= 1;
+      return val;
+    }
+
     const head = this.head;
     this.head = this.head.next;
+    this.head.prev = null;
+    this.length -= 1;
+
     return head.val;
   }
 
@@ -112,7 +122,6 @@ class DoublyLinkedList {
 
   insertAt(idx, val) {
     if (idx > this.length || idx < 0) throw new Error("Invalid index");
-    this.length += 1;
 
     if (idx === 0) return this.unshift(val);
     if (idx === this.length) return this.push(val);
@@ -124,23 +133,25 @@ class DoublyLinkedList {
     newNode.next = prev.next;
     prev.next = newNode;
     newNode.next.prev = newNode;
+    this.length += 1;
   }
 
   /** removeAt(idx): return & remove item at idx, */
 
   removeAt(idx) {
     if (idx >= this.length || idx < 0) throw new Error("Invalid index");
-    this.length -= 1;
 
     if (idx === 0) return this.shift();
     if (idx === this.length - 1) return this.pop();
 
-    const prev = this._get(idx);
-    const remvoedNode = prev.next;
+    const removedNode = this._get(idx);
 
-    prev.next = prev.next.next;
-    prev.next.next.prev = prev;
-    return remvoedNode.val;
+    removedNode.prev.next = removedNode.next;
+    removedNode.next.prev = removedNode.prev;
+
+    this.length -= 1;
+
+    return removedNode.val;
   }
 
   /** return average (mean) of list values. */
